@@ -1,0 +1,8 @@
+// Windows build for the Riak PB extension (PHP 8.4, Visual Studio 2022 / vs17).
+ARG_ENABLE("riak-pb", "Enable the Riak PB file client", "no");
+
+if (PHP_RIAK_PB != "no") {
+	EXTENSION("riak_pb", "riak_pb.c pb_codec.c riak_transport.c", PHP_RIAK_PB_SHARED,
+		"/DZEND_ENABLE_STATIC_TSRMLS_CACHE=1");
+	ADD_FLAG("LIBS_RIAK_PB", "ws2_32.lib");
+}

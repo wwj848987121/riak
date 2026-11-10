@@ -104,7 +104,7 @@ CLI 和 Apache 可以使用不同的 PHP 配置；Web 侧也应确认 `extension
 
 ## PHP 应用接入
 
-项目只有一个 Riak 客户端 `Yenei\File\RiakClient`（`cdm_domains/yenei/File/RiakClient.php`），只走 PB，
+项目只有一个 Riak 客户端 `Wriak\File\RiakClient`（`cdm_domains/wriak/File/RiakClient.php`），只走 PB，
 没有 HTTP 实现，也不会回退 HTTP。缺少扩展时构造即报错，PB 请求失败时抛出异常。
 
 连接配置按以下优先级读取：
@@ -119,7 +119,7 @@ CLI 和 Apache 可以使用不同的 PHP 配置；Web 侧也应确认 `extension
 直接使用客户端：
 
 ```php
-$client = new \Yenei\File\RiakClient();            // 使用配置
+$client = new \Wriak\File\RiakClient();            // 使用配置
 $client->put('cdm', 'file.txt', $content, 'text/plain');
 $object = $client->get('cdm', 'file.txt');          // ['content' => ..., 'content_type' => ...] 或 null
 ```
@@ -127,16 +127,16 @@ $object = $client->get('cdm', 'file.txt');          // ['content' => ..., 'conte
 通过 `RiakFileServer` 指定 PB 主机和端口：
 
 ```php
-$server = \Yenei\File\RiakFileServer::getInstance('<RIAK_PB_HOST>', 8129);
+$server = \Wriak\File\RiakFileServer::getInstance('<RIAK_PB_HOST>', 8129);
 // 或使用构造函数：
-$server = new \Yenei\File\RiakFileServer('<RIAK_PB_HOST>', 8129);
+$server = new \Wriak\File\RiakFileServer('<RIAK_PB_HOST>', 8129);
 $result = $server->move('/path/to/file.txt', 'file.txt', 'cdm');
 ```
 
 主机只填 IP 或域名，不带 `tcp://` 或 `http://` 前缀；省略端口时按上面的优先级读取。需要指定超时时使用配置数组：
 
 ```php
-$server = new \Yenei\File\RiakFileServer([
+$server = new \Wriak\File\RiakFileServer([
     'pb_host' => '<RIAK_PB_HOST>',
     'pb_port' => 8129,
     'pb_timeout_ms' => 3000,
